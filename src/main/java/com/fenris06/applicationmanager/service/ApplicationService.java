@@ -11,4 +11,7 @@ public interface ApplicationService {
     ResponseApplicationDto updateApplication(Long userId, Long applicationId, RequestApplicationDto body);
 
     List<ResponseApplicationDto> getUserApplications(Long userId, Integer from, Integer size, String sort);
+
+    List<ResponseApplicationDto> getAllSentApplication(String userName, Integer from, Integer size, String sort);
+
 }

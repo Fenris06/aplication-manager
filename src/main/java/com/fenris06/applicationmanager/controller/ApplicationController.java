@@ -20,24 +20,32 @@ import java.util.List;
 public class ApplicationController {
     private final ApplicationService applicationService;
 
-    @PostMapping("/{userId}")
+    @PostMapping("/users/{userId}")
     public ResponseApplicationDto createApplication(@PathVariable("userId") @Min(1) Long userId,
                                                     @RequestBody @Valid RequestApplicationDto body) {
         return applicationService.createApplication(userId, body);//TODO узнать про отправление заявок
     }
 
-    @PatchMapping("/{userId}/update/{applicationId}")
+    @PatchMapping("/users/{userId}/update/{applicationId}")
     public ResponseApplicationDto updateApplication(@PathVariable("userId") @Min(1) Long userId,
                                                     @PathVariable("applicationId") @Min(1) Long applicationId,
                                                     @RequestBody @Valid RequestApplicationDto body) {
         return applicationService.updateApplication(userId, applicationId, body);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     public List<ResponseApplicationDto> getUserApplications(@PathVariable("userId") @Min(1) Long userId,
                                                             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                             @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
-                                                            @RequestParam(name = "sort", required = false, defaultValue = "DESC") String sort) {
+                                                            @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
         return applicationService.getUserApplications(userId, from, size, sort);
+    }
+
+    @GetMapping("/operator")
+    public List<ResponseApplicationDto> getAllSentApplication(@RequestParam(name = "userName", required = false, defaultValue = "") String userName,
+                                                              @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
+                                                              @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
+                                                              @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+        return applicationService.getAllSentApplication(userName, from, size, sort);
     }
 }

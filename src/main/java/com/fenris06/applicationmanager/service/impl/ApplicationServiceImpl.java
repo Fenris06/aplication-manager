@@ -55,7 +55,42 @@ public class ApplicationServiceImpl implements ApplicationService {
             case "DESC" -> applicationRepository.findByUser_IdOrderByCreateDateDesc(userId, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
                     .collect(Collectors.toList());
-            default -> throw new ArgumentException(String.format("Type of sort = %s not supported", sort));
+            default -> throw new ArgumentException(String.format("Type of sort = %s unsupported", sort));
+        };
+    }
+
+    @Override
+    public List<ResponseApplicationDto> getAllSentApplication(String userName, Integer from, Integer size, String sort) {
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+        if (!userName.isEmpty()) {
+            return getApplicationByUserName(userName, pageRequest, sort);
+        } else {
+            return getApplicationWithoutUser(from, pageRequest, sort);
+        }
+    }
+
+    private List<ResponseApplicationDto> getApplicationWithoutUser(Integer from, PageRequest pageRequest, String sort) {
+        return switch (sort) {
+            case "ASC" -> applicationRepository.findByOrderByCreateDateAsc(pageRequest).stream()
+                    .map(ApplicationMapper::toDto)
+                    .collect(Collectors.toList());
+            case "DESC" -> applicationRepository.findByOrderByCreateDateDesc(pageRequest).stream()
+                    .map(ApplicationMapper::toDto)
+                    .collect(Collectors.toList());
+            default -> throw new ArgumentException(String.format("Type of sort = %s unsupported", sort));
+        }; //TODO подумать над общим методом с сортировкой
+    }
+
+    private List<ResponseApplicationDto> getApplicationByUserName(String userName, PageRequest pageRequest, String sort) {
+        return switch (sort) {
+            case "ASC" ->
+                    applicationRepository.findByUser_UserNameLikeAndStatusOrderByCreateDateAsc(userName, Status.SENT, pageRequest).stream()
+                            .map(ApplicationMapper::toDto).collect(Collectors.toList());
+            case "DESC" ->
+                    applicationRepository.findByUser_UserNameLikeAndStatusOrderByCreateDateDesc(userName, Status.SENT, pageRequest).stream()
+                            .map(ApplicationMapper::toDto)
+                            .collect(Collectors.toList()); //TODO подумать над отдельным дто для просмотра заявок оператора
+            default -> throw new ArgumentException(String.format("Type of sort = %s unsupported", sort));
         };
     }
 
