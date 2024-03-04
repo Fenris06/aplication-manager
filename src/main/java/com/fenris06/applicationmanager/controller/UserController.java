@@ -24,10 +24,8 @@ public class UserController {
         return userService.getUsers(from, size);
     }
 
-    @PatchMapping()
-    public List<UserDto> updateUsersRole(@RequestParam(name = "ids", required = false , defaultValue = "") @Size(min = 1, max = 100) Set<Long> ids) {
+    @PatchMapping
+    public List<UserDto> updateUsersRole(@RequestParam(name = "ids", required = false, defaultValue = "") @Size(min = 1, max = 100) Set<Long> ids) {
         return userService.updateUsersRole(ids);
     }
-
-
 }
