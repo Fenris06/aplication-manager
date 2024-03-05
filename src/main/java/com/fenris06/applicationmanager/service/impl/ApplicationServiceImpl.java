@@ -17,6 +17,7 @@ import com.fenris06.applicationmanager.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ResponseApplicationDto updateApplication(Long userId, Long applicationId, RequestApplicationDto body) {
         checkUser(userId);
-        Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new NotFoundException(String.format("Application id = %s not found", applicationId)));
+        Application application = checkApplication(applicationId);
         checkOwner(application, userId);
         checkApplicationStatus(application);
         updateFields(application, body);
@@ -64,6 +64,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseApplicationDto> getAllSentApplication(String userName, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from / size, size);
         if (!userName.isEmpty()) {
@@ -75,8 +76,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public ResponseApplicationDto getApplicationById(Long applicationId) {
-        return ApplicationMapper.toDto(applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new NotFoundException(String.format("Application id = %d not found", applicationId))));
+        return ApplicationMapper.toDto(checkApplication(applicationId));
     }
 
     @Override
@@ -138,12 +138,15 @@ public class ApplicationServiceImpl implements ApplicationService {
     private List<ResponseApplicationDto> getApplicationByUserName(String userName, List<Status> statusList, PageRequest pageRequest, String sort) {
         return switch (sort) {
             case "ASC" ->
-                    applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateAsc(userName, statusList, pageRequest).stream()
+                    applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateASC(userName, statusList, pageRequest).stream()
                             .map(ApplicationMapper::toDto).collect(Collectors.toList());
             case "DESC" ->
-                    applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateDesc(userName, statusList, pageRequest).stream()
-                            .map(ApplicationMapper::toDto)
-                            .collect(Collectors.toList()); //TODO подумать над отдельным дто для просмотра заявок оператора
+//                    applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateDesc(userName, statusList, pageRequest).stream()
+//                            .map(ApplicationMapper::toDto)
+//                            .collect(Collectors.toList());
+                    applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateDesc(userName, statusList, pageRequest).stream().map(ApplicationMapper::toDto)
+                            .collect(Collectors.toList());
+// TODO подумать над отдельным дто для просмотра заявок оператора
             default -> throw new ArgumentException(String.format("Type of sort = %s unsupported", sort));
         };
     }
@@ -157,7 +160,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 
     private void checkApplicationStatus(Application application) {
-        if (application.getStatus().equals(Status.DRAFT)) {
+        if (!application.getStatus().equals(Status.DRAFT)) {
             throw new ArgumentException(String.format(
                     "You can change application only if status of application DRAFT!" +
                             " Status of this application %s", application.getStatus())
@@ -174,5 +177,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     private User checkUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User id = %d not found", userId)));
+    }
+
+    private Application checkApplication(Long applicationId) {
+        return applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new NotFoundException(String.format("Application id = %s not found", applicationId)));
     }
 }

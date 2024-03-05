@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("admin/users")
 @RequiredArgsConstructor
 @Validated
 public class UserController {
@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @PatchMapping
-    public List<UserDto> updateUsersRole(@RequestParam(name = "ids", required = false, defaultValue = "") @Size(min = 1, max = 100) Set<Long> ids) {
+    public List<UserDto> updateUsersRole(@RequestParam(name = "ids", required = false, defaultValue = "") @Size(min = 1, max = 5) Set<Long> ids) {
         return userService.updateUsersRole(ids);
     }
 }

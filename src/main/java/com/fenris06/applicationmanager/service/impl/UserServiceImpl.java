@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getUsers(Integer from, Integer size) {
-        PageRequest pageRequest = PageRequest.of(from / size, size);
+        PageRequest pageRequest = PageRequest.of(from, size);
         return userRepository.findAllWithRoles(pageRequest).stream()
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());
@@ -35,13 +35,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> updateUsersRole(Set<Long> ids) {
-        Role role = roleRepository.findByName(updateRole)
-                .orElseThrow(() -> new NotFoundException(String.format("Role %s not found", updateRole)));
-        List<User> users = userRepository.findByIdInAndRoles_NameNot(ids, updateRole);
+        Role role = getRole();
+        List<User> users = getUpdateUsers(ids);
         setRole(users, role);
         return userRepository.saveAll(users).stream()
                 .map(UserMapper::toDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); //TODO подумать как уменьшить количество запросов
+    }
+
+    private List<User> getUpdateUsers(Set<Long> ids) {
+        return userRepository.findByIdInAndRoles_NameNot(ids, updateRole);
+    }
+
+    private Role getRole() {
+        return roleRepository.findByName(updateRole)
+                .orElseThrow(() -> new NotFoundException(String.format("Role %s not found", updateRole)));
     }
 
     private void setRole(List<User> users, Role role) {
