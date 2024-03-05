@@ -4,6 +4,7 @@ import com.fenris06.applicationmanager.dto.RequestApplicationDto;
 import com.fenris06.applicationmanager.dto.ResponseApplicationDto;
 
 import com.fenris06.applicationmanager.dto.UpdateListApplicationDto;
+import com.fenris06.applicationmanager.model.AdminApplicationStatus;
 import com.fenris06.applicationmanager.service.ApplicationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -57,5 +58,14 @@ public class ApplicationController {
     @PatchMapping("/operator/update")
     public List<ResponseApplicationDto> updateApplicationStatus(@RequestBody @Valid UpdateListApplicationDto applicationDto) {
         return applicationService.updateApplicationStatus(applicationDto);
+    }
+
+    @GetMapping("/admin")
+    public List<ResponseApplicationDto> getAdminApplications(@RequestParam(name = "status", required = false, defaultValue = "SENT") List<AdminApplicationStatus> statusList,
+                                                             @RequestParam(name = "userName", required = false, defaultValue = "") String userName,
+                                                             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
+                                                             @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
+                                                             @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+        return applicationService.getAdminApplications(statusList, userName, from, size, sort);
     }
 }

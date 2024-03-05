@@ -17,11 +17,17 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     List<Application> findByUser_IdOrderByCreateDateDesc(Long id, Pageable pageable);
 
-    List<Application> findByUser_UserNameLikeAndStatusOrderByCreateDateAsc(String userName, Status status, Pageable pageable);
+    List<Application> findByUser_UserNameLikeAndStatusInOrderByCreateDateAsc(String userName, Collection<Status> statuses, Pageable pageable);
 
-    List<Application> findByUser_UserNameLikeAndStatusOrderByCreateDateDesc(String userName, Status status, Pageable pageable);
+    List<Application> findByUser_UserNameLikeAndStatusInOrderByCreateDateDesc(String userName, Collection<Status> statuses, Pageable pageable);
 
-    List<Application> findByStatusOrderByCreateDateAsc(Status status, Pageable pageable);
+    //List<Application> findByUser_UserNameLikeAndStatusOrderByCreateDateDesc(String userName, Status status, Pageable pageable);
 
-    List<Application> findByStatusOrderByCreateDateDesc(Status status, Pageable pageable);
+    List<Application> findByStatusInOrderByCreateDateAsc(Collection<Status> statuses, Pageable pageable);
+
+    List<Application> findByStatusInOrderByCreateDateDesc(Collection<Status> statuses, Pageable pageable);
+
+
+
+
 }

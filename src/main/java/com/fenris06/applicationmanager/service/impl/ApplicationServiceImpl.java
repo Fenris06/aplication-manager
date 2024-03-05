@@ -7,6 +7,7 @@ import com.fenris06.applicationmanager.dto.UpdateListApplicationDto;
 import com.fenris06.applicationmanager.exception.ArgumentException;
 import com.fenris06.applicationmanager.exception.NotFoundException;
 import com.fenris06.applicationmanager.mapper.ApplicationMapper;
+import com.fenris06.applicationmanager.model.AdminApplicationStatus;
 import com.fenris06.applicationmanager.model.Application;
 import com.fenris06.applicationmanager.model.Status;
 import com.fenris06.applicationmanager.model.User;
@@ -66,9 +67,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ResponseApplicationDto> getAllSentApplication(String userName, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from / size, size);
         if (!userName.isEmpty()) {
-            return getApplicationByUserName(userName, pageRequest, sort);
+            return getApplicationByUserName(userName, List.of(Status.SENT), pageRequest, sort);
         } else {
-            return getApplicationWithoutUser(pageRequest, sort);
+            return getApplicationWithoutUser(List.of(Status.SENT), pageRequest, sort);
         }
     }
 
@@ -85,6 +86,21 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.saveAll(updateStatus).stream()
                 .map(ApplicationMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ResponseApplicationDto> getAdminApplications(List<AdminApplicationStatus> applicationStatuses, String userName, Integer from, Integer size, String sort) {
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+        List<Status> statusList = createStatusList(applicationStatuses);
+        if (!userName.isEmpty()) {
+            return getApplicationByUserName(userName, statusList, pageRequest, sort);
+        } else {
+            return getApplicationWithoutUser(statusList, pageRequest, sort);
+        }
+    }
+
+    private List<Status> createStatusList(List<AdminApplicationStatus> applicationStatuses) {
+        return applicationStatuses.stream().map(a -> Status.valueOf(a.name())).toList();
     }
 
     private List<Application> updateApplicationStatusByOperator(Map<Long, Application> applicationMap, UpdateListApplicationDto applicationDto) {
@@ -107,25 +123,25 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .collect(Collectors.toMap(Application::getId, application -> application));
     }
 
-    private List<ResponseApplicationDto> getApplicationWithoutUser(PageRequest pageRequest, String sort) {
+    private List<ResponseApplicationDto> getApplicationWithoutUser(List<Status> statusList, PageRequest pageRequest, String sort) {
         return switch (sort) {
-            case "ASC" -> applicationRepository.findByStatusOrderByCreateDateAsc(Status.SENT, pageRequest).stream()
+            case "ASC" -> applicationRepository.findByStatusInOrderByCreateDateAsc(statusList, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
                     .collect(Collectors.toList());
-            case "DESC" -> applicationRepository.findByStatusOrderByCreateDateDesc(Status.SENT, pageRequest).stream()
+            case "DESC" -> applicationRepository.findByStatusInOrderByCreateDateDesc(statusList, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
                     .collect(Collectors.toList());
             default -> throw new ArgumentException(String.format("Type of sort = %s unsupported", sort));
         }; //TODO подумать над общим методом с сортировкой
     }
 
-    private List<ResponseApplicationDto> getApplicationByUserName(String userName, PageRequest pageRequest, String sort) {
+    private List<ResponseApplicationDto> getApplicationByUserName(String userName, List<Status> statusList, PageRequest pageRequest, String sort) {
         return switch (sort) {
             case "ASC" ->
-                    applicationRepository.findByUser_UserNameLikeAndStatusOrderByCreateDateAsc(userName, Status.SENT, pageRequest).stream()
+                    applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateAsc(userName, statusList, pageRequest).stream()
                             .map(ApplicationMapper::toDto).collect(Collectors.toList());
             case "DESC" ->
-                    applicationRepository.findByUser_UserNameLikeAndStatusOrderByCreateDateDesc(userName, Status.SENT, pageRequest).stream()
+                    applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateDesc(userName, statusList, pageRequest).stream()
                             .map(ApplicationMapper::toDto)
                             .collect(Collectors.toList()); //TODO подумать над отдельным дто для просмотра заявок оператора
             default -> throw new ArgumentException(String.format("Type of sort = %s unsupported", sort));
@@ -137,7 +153,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         Optional.ofNullable(body.getDescription()).ifPresent(application::setDescription);
         Optional.ofNullable(body.getPhoneNumber()).ifPresent(application::setPhoneNumber);
         Optional.ofNullable(body.getStatus()).ifPresent(application::setStatus);
-        //TODO подумать над датой обновления
     }
 
 

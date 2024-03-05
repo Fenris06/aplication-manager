@@ -1,7 +1,7 @@
 package com.fenris06.applicationmanager.dto;
 
 import com.fenris06.applicationmanager.model.Status;
-import com.fenris06.applicationmanager.model.User;
+
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
