@@ -3,6 +3,7 @@ package com.fenris06.applicationmanager.controller;
 import com.fenris06.applicationmanager.dto.RequestApplicationDto;
 import com.fenris06.applicationmanager.dto.ResponseApplicationDto;
 
+import com.fenris06.applicationmanager.dto.UpdateListApplicationDto;
 import com.fenris06.applicationmanager.service.ApplicationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -47,5 +48,14 @@ public class ApplicationController {
                                                               @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
                                                               @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
         return applicationService.getAllSentApplication(userName, from, size, sort);
+    }
+    @GetMapping("/operator/{applicationId}")
+    public ResponseApplicationDto getApplicationById(@PathVariable("applicationId") @Min(1) Long applicationId) {
+        return applicationService.getApplicationById(applicationId);
+    }
+
+    @PatchMapping("/operator/update")
+    public List<ResponseApplicationDto> updateApplicationStatus(@RequestBody @Valid UpdateListApplicationDto applicationDto) {
+        return applicationService.updateApplicationStatus(applicationDto);
     }
 }

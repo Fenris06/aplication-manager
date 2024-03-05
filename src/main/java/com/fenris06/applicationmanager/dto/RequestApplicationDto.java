@@ -20,7 +20,7 @@ public class RequestApplicationDto {
     @NotBlank(message = "Field description can't be empty or have only spase")
     @Size(min = 3, max = 500, message = "Field description must be a minimum of 3 characters and a maximum of 500 characters")
     private String description;
-    @NotNull
+    @NotNull(message = "Field phoneNumber can't be null")
     @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$", message = "Field phone must have phone number characters")
     private String phoneNumber;
     @NotNull

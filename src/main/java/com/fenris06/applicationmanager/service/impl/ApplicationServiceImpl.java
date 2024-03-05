@@ -2,6 +2,8 @@ package com.fenris06.applicationmanager.service.impl;
 
 import com.fenris06.applicationmanager.dto.RequestApplicationDto;
 import com.fenris06.applicationmanager.dto.ResponseApplicationDto;
+import com.fenris06.applicationmanager.dto.UpdateApplicationDto;
+import com.fenris06.applicationmanager.dto.UpdateListApplicationDto;
 import com.fenris06.applicationmanager.exception.ArgumentException;
 import com.fenris06.applicationmanager.exception.NotFoundException;
 import com.fenris06.applicationmanager.mapper.ApplicationMapper;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,16 +68,51 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (!userName.isEmpty()) {
             return getApplicationByUserName(userName, pageRequest, sort);
         } else {
-            return getApplicationWithoutUser(from, pageRequest, sort);
+            return getApplicationWithoutUser(pageRequest, sort);
         }
     }
 
-    private List<ResponseApplicationDto> getApplicationWithoutUser(Integer from, PageRequest pageRequest, String sort) {
+    @Override
+    public ResponseApplicationDto getApplicationById(Long applicationId) {
+        return ApplicationMapper.toDto(applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new NotFoundException(String.format("Application id = %d not found", applicationId))));
+    }
+
+    @Override
+    public List<ResponseApplicationDto> updateApplicationStatus(UpdateListApplicationDto applicationDto) {
+        Map<Long, Application> applicationMap = findUpdateApplications(applicationDto);
+        List<Application> updateStatus = updateApplicationStatusByOperator(applicationMap, applicationDto);
+        return applicationRepository.saveAll(updateStatus).stream()
+                .map(ApplicationMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private List<Application> updateApplicationStatusByOperator(Map<Long, Application> applicationMap, UpdateListApplicationDto applicationDto) {
+        applicationDto.getUpdateApplicationDtoList().forEach(a -> {
+            if (applicationMap.containsKey(a.getApplicationId())) {
+                Application application = applicationMap.get(a.getApplicationId());
+                application.setStatus(a.getStatus());
+                applicationMap.put(a.getApplicationId(), application);
+            } //TODO подумать над проверкой пустой мапы.
+        });
+        return applicationMap.values().stream()
+                .toList();
+    }
+
+    private Map<Long, Application> findUpdateApplications(UpdateListApplicationDto applicationDto) {
+        List<Long> ids = applicationDto.getUpdateApplicationDtoList().stream()
+                .map(UpdateApplicationDto::getApplicationId)
+                .toList();
+        return applicationRepository.findByIdInAndStatus(ids, Status.SENT).stream()
+                .collect(Collectors.toMap(Application::getId, application -> application));
+    }
+
+    private List<ResponseApplicationDto> getApplicationWithoutUser(PageRequest pageRequest, String sort) {
         return switch (sort) {
-            case "ASC" -> applicationRepository.findByOrderByCreateDateAsc(pageRequest).stream()
+            case "ASC" -> applicationRepository.findByStatusOrderByCreateDateAsc(Status.SENT, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
                     .collect(Collectors.toList());
-            case "DESC" -> applicationRepository.findByOrderByCreateDateDesc(pageRequest).stream()
+            case "DESC" -> applicationRepository.findByStatusOrderByCreateDateDesc(Status.SENT, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
                     .collect(Collectors.toList());
             default -> throw new ArgumentException(String.format("Type of sort = %s unsupported", sort));
@@ -105,7 +143,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private void checkApplicationStatus(Application application) {
         if (application.getStatus().equals(Status.DRAFT)) {
-            throw new ArithmeticException(String.format(
+            throw new ArgumentException(String.format(
                     "You can change application only if status of application DRAFT!" +
                             " Status of this application %s", application.getStatus())
             );
@@ -114,7 +152,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private void checkOwner(Application application, Long userId) {//TODO после добавления секюрити возможно убрать проверку
         if (!Objects.equals(application.getUser().getId(), userId)) {
-            throw new ArithmeticException("You are not owner of this application! Only application owner can change application");
+            throw new ArgumentException("You are not owner of this application! Only application owner can change application");
         }
     }
 
@@ -122,6 +160,4 @@ public class ApplicationServiceImpl implements ApplicationService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User id = %d not found", userId)));
     }
-
-
 }

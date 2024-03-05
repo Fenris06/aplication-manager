@@ -2,6 +2,7 @@ package com.fenris06.applicationmanager.service;
 
 import com.fenris06.applicationmanager.dto.RequestApplicationDto;
 import com.fenris06.applicationmanager.dto.ResponseApplicationDto;
+import com.fenris06.applicationmanager.dto.UpdateListApplicationDto;
 
 import java.util.List;
 
@@ -14,4 +15,7 @@ public interface ApplicationService {
 
     List<ResponseApplicationDto> getAllSentApplication(String userName, Integer from, Integer size, String sort);
 
+    ResponseApplicationDto getApplicationById(Long applicationId);
+
+    List<ResponseApplicationDto> updateApplicationStatus(UpdateListApplicationDto applicationDto);
 }
