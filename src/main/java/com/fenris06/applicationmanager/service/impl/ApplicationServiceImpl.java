@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
@@ -44,7 +46,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         checkUser(userId);
         Application application = checkApplication(applicationId);
         checkOwner(application, userId);
-        checkApplicationStatus(application);
+        checkApplicationUserStatus(application);
         updateFields(application, body);
         return ApplicationMapper.toDto(applicationRepository.save(application));
     }
@@ -76,11 +78,15 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public ResponseApplicationDto getApplicationById(Long applicationId) {
-        return ApplicationMapper.toDto(checkApplication(applicationId));
+        Application application = checkApplication(applicationId);
+        checkApplicationOperatorStatus(application.getStatus());
+        return ApplicationMapper.toDto(application);
     }
+
 
     @Override
     public List<ResponseApplicationDto> updateApplicationStatus(UpdateListApplicationDto applicationDto) {
+        checkUpdateStatus(applicationDto);
         Map<Long, Application> applicationMap = findUpdateApplications(applicationDto);
         List<Application> updateStatus = updateApplicationStatusByOperator(applicationMap, applicationDto);
         return applicationRepository.saveAll(updateStatus).stream()
@@ -141,9 +147,6 @@ public class ApplicationServiceImpl implements ApplicationService {
                     applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateASC(userName, statusList, pageRequest).stream()
                             .map(ApplicationMapper::toDto).collect(Collectors.toList());
             case "DESC" ->
-//                    applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateDesc(userName, statusList, pageRequest).stream()
-//                            .map(ApplicationMapper::toDto)
-//                            .collect(Collectors.toList());
                     applicationRepository.findByUser_UserNameLikeAndStatusInOrderByCreateDateDesc(userName, statusList, pageRequest).stream().map(ApplicationMapper::toDto)
                             .collect(Collectors.toList());
 // TODO подумать над отдельным дто для просмотра заявок оператора
@@ -155,11 +158,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         Optional.ofNullable(body.getName()).ifPresent(application::setName);
         Optional.ofNullable(body.getDescription()).ifPresent(application::setDescription);
         Optional.ofNullable(body.getPhoneNumber()).ifPresent(application::setPhoneNumber);
-        Optional.ofNullable(body.getStatus()).ifPresent(application::setStatus);
+        Optional.ofNullable(body.getStatus()).ifPresent(application::setStatus); // TODO придумать валидацию обновлений
     }
 
 
-    private void checkApplicationStatus(Application application) {
+    private void checkApplicationUserStatus(Application application) {
         if (!application.getStatus().equals(Status.DRAFT)) {
             throw new ArgumentException(String.format(
                     "You can change application only if status of application DRAFT!" +
@@ -182,5 +185,22 @@ public class ApplicationServiceImpl implements ApplicationService {
     private Application checkApplication(Long applicationId) {
         return applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new NotFoundException(String.format("Application id = %s not found", applicationId)));
+    }
+
+    private void checkUpdateStatus(UpdateListApplicationDto applicationDto) {
+        applicationDto.getUpdateApplicationDtoList().forEach(a -> {
+            if (a.getApplicationId() == null || a.getApplicationId() < 1) {
+                throw new ArgumentException("Filed id must be min 1");
+            }
+            if (a.getStatus() == null || Status.SENT.equals(a.getStatus()) || Status.DRAFT.equals(a.getStatus())) {
+                throw new ArgumentException("Filed id status be  ACCEPTED or REJECTED");
+            }
+        });
+    }
+
+    private void checkApplicationOperatorStatus(Status status) {
+        if (!Status.SENT.equals(status)) {
+            throw new ArgumentException("Filed id status be  must by SENT"); // TODO вынести валидацию в отдельный метод
+        }
     }
 }

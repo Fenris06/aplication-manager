@@ -2,6 +2,7 @@ package com.fenris06.applicationmanager.dto;
 
 import com.fenris06.applicationmanager.model.Status;
 
+import com.fenris06.applicationmanager.utils.annotation.UserStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -24,6 +25,6 @@ public class RequestApplicationDto {
     @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$", message = "Field phone must have phone number characters")
     private String phoneNumber;
     @NotNull
-    //TODO сделать аннотацию для валидации статуса
+    @UserStatus(message = "Field status can be DRAFT OR SENT")
     private Status status;
 }
