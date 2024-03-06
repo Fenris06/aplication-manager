@@ -15,7 +15,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class UserDto {
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private List<RoleDto> roles = new ArrayList<>();
 }

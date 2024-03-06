@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -20,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllWithRoles(Pageable pageable);
 
     List<User> findByIdInAndRoles_NameNot(Collection<Long> ids, String name);
+
 
 
 }

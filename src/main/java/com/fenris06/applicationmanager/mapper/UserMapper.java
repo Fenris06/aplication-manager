@@ -12,7 +12,7 @@ public class UserMapper {
    public static UserDto toDto (User user) {
        UserDto userDto = new UserDto();
        userDto.setId(user.getId());
-       userDto.setUserName(user.getUserName());
+       userDto.setUsername(user.getUsername());
        userDto.setEmail(user.getEmail());
 
        List<RoleDto> roleDtos = user.getRoles()

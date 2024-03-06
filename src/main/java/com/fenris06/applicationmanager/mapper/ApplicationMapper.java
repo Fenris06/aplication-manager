@@ -26,7 +26,7 @@ public class ApplicationMapper {
         responseApplicationDto.setPhoneNumber(application.getPhoneNumber());
         responseApplicationDto.setCreateDate(application.getCreateDate());
         responseApplicationDto.setStatus(application.getStatus());
-        responseApplicationDto.setOwner(application.getUser().getUserName());
+        responseApplicationDto.setOwner(application.getUser().getUsername());
         return responseApplicationDto;
     }
 }

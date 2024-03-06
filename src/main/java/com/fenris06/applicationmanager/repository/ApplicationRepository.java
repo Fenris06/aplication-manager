@@ -24,13 +24,13 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("SELECT a " +
             "FROM Application a " +
             "JOIN FETCH a.user " +
-            "WHERE a.user.userName LIKE %:userName% AND a.status IN (:statuses)" +
+            "WHERE a.user.username LIKE %:userName% AND a.status IN (:statuses)" +
             "ORDER BY a.createDate ASC")
     List<Application> findByUser_UserNameLikeAndStatusInOrderByCreateDateASC(String userName, Collection<Status> statuses, Pageable pageable);
     @Query("SELECT a " +
             "FROM Application a " +
             "JOIN FETCH a.user " +
-            "WHERE a.user.userName LIKE %:userName% AND a.status IN (:statuses)" +
+            "WHERE a.user.username LIKE %:userName% AND a.status IN (:statuses)" +
             "ORDER BY a.createDate DESC")
     List<Application> findByUser_UserNameLikeAndStatusInOrderByCreateDateDesc(String userName, Collection<Status> statuses, Pageable pageable);
 
