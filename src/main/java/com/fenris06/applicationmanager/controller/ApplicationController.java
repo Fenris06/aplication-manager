@@ -25,7 +25,7 @@ public class ApplicationController {
     @PostMapping("/users/{userId}")
     public ResponseApplicationDto createApplication(@PathVariable("userId") @Min(1) Long userId,
                                                     @RequestBody @Valid RequestApplicationDto body) {
-        return applicationService.createApplication(userId, body);//TODO узнать про отправление заявок
+        return applicationService.createApplication(userId, body);
     }
 
     @PatchMapping("/users/{userId}/update/{applicationId}")

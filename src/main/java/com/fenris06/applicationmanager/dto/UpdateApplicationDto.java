@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @EqualsAndHashCode
 public class UpdateApplicationDto {
-    private Long applicationId; //TODO добавить проверку статусов
-    private Status status; //TODO посмотреть работают ли аннотации
+    private Long applicationId;
+    private Status status;
 
 }

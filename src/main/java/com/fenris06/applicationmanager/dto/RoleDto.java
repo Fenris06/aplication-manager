@@ -9,6 +9,5 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class RoleDto {
-    private Integer id;
     private String name;
 }

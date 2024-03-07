@@ -1,6 +1,7 @@
 package com.fenris06.applicationmanager.model;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "users")
 public class User  implements UserDetails {
