@@ -38,7 +38,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         User user = checkUser(userId);
         Application application = ApplicationMapper.fromDto(body);
         application.setUser(user);
-        return ApplicationMapper.toDto(applicationRepository.save(application));
+        return ApplicationMapper.toDto(applicationRepository.save(application)); // TODO проверка роли юзера
     }
 
     @Override

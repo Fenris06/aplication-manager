@@ -11,6 +11,8 @@ import com.fenris06.applicationmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,5 +56,13 @@ public class UserServiceImpl implements UserService {
 
     private void setRole(List<User> users, Role role) {
         users.forEach(user -> user.getRoles().add(role));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findAuthorizationUser(username)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username)));
+
+        return user;
     }
 }

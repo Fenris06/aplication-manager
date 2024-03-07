@@ -4,12 +4,12 @@ VALUES ('ROLE_USER'),
        ('ROLE_OPERATOR');
 
 INSERT INTO users (user_name, email, password)
-VALUES            ('Thor', 'thor@.ru', '123'),
-                  ('Odin', 'odin@.ru', '123'),
-                  ('Loki', 'loki@.ru', '123'),
-                  ('Sif', 'sif@.ru', '123'),
-                  ('Heimdallr', 'heimdallr@.ru', '123'),
-                  ('Nanna', 'nanna@.ru', '123');
+VALUES            ('Thor', 'thor@.ru', '$2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.'),
+                  ('Odin', 'odin@.ru', '$2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.'),
+                  ('Loki', 'loki@.ru', '$2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.'),
+                  ('Sif', 'sif@.ru', '$2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.'),
+                  ('Heimdallr', 'heimdallr@.ru', '$2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.'),
+                  ('Nanna', 'nanna@.ru', '$2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.');
 
 INSERT INTO user_roles (user_id, role_id)
 VALUES                 (1, 2),
