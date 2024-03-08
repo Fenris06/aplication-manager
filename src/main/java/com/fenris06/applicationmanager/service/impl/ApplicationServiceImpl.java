@@ -50,7 +50,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<ResponseApplicationDto> getUserApplications(Long userId, Integer from, Integer size, String sort) {
-        PageRequest pageRequest = PageRequest.of(from / size, size);
+        PageRequest pageRequest = PageRequest.of(size, size);
         return switch (sort) {
             case "ASC" -> applicationRepository.findApplicationsByUserAsc(userId, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
@@ -66,7 +66,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     @Transactional(readOnly = true)
     public List<ResponseApplicationDto> getAllSentApplication(String userName, Integer from, Integer size, String sort) {
-        PageRequest pageRequest = PageRequest.of(from / size, size);
+        PageRequest pageRequest = PageRequest.of(from, size);
         if (!userName.isEmpty()) {
             return getApplicationByUserName(userName, List.of(Status.SENT), pageRequest, sort);
         } else {
@@ -94,7 +94,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<ResponseApplicationDto> getAdminApplications(List<AdminApplicationStatus> applicationStatuses, String userName, Integer from, Integer size, String sort) {
-        PageRequest pageRequest = PageRequest.of(from / size, size);
+        PageRequest pageRequest = PageRequest.of(from, size); // TODO поправить пагинацию
         List<Status> statusList = createStatusList(applicationStatuses); //TODO подумать над проверкой листа со статусами для админа
         if (!userName.isEmpty()) {
             return getApplicationByUserName(userName, statusList, pageRequest, sort);
