@@ -43,3 +43,5 @@
 * Maven
 * Mockito
 * JUnit 5
+
+  ![database diagram](https://github.com/Fenris06/application-manager/blob/master/application-db%20-%20public.png)
