@@ -12,9 +12,15 @@
 
 * **Функции роли ADMIN**
 * логиниться в систему (выдача jwt и access токенов) http://localhost:8080/login
-* выходить из системы [/logout](http://localhost:8080/logout (в стадии разработки))
+* выходить из системы http://localhost:8080/logout (в стадии разработки)
 * смотреть список пользователей http://localhost:8080/admin/person
 * смотреть заявки в статусе SENT, ACCEPTED, REJECTED. Пагинация 5 элементов, сортировка по дате. Фильтрация по имени. http://localhost:8080/applications/admin?name=Thor&status=SENT&status=ACCEPTED&status=REJECTED&sort=DESC
 * назначать пользователям права оператора http://localhost:8080/admin/person?ids=3&ids=4&ids=5
 
-* **Функции роли ADMIN** 
+* **Функции роли OPERATOR** 
+* логиниться в систему (выдача jwt и access токенов) http://localhost:8080/login
+* выходить из системы http://localhost:8080/logout (в стадии разработки)
+* смотреть все отправленные на рассмотрение заявки (статус SENT) с возможностью сортировки по дате создания в оба направления (как от самой старой к самой новой, так и наоборот) и пагинацией по 5 элементов. Должна быть фильтрация по имени. Просматривать отправленные заявки только конкретного пользователя по его имени/части имени (у пользователя, соответственно, должно быть поле name) http://localhost:8080/applications/operator?name=Tho&sort=DESC 
+* смотреть заявку по id http://localhost:8080/applications/operator/:applicationId (статус SENT)
+* принимать заявки http://localhost:8080/applications/operator/update (можно принимать от 1 до 5 заяваок за раз. Нужно указать в теле запроса статус заявки ACCEPTED);
+* отклонять заявки http://localhost:8080/applications/operator/update (можно отклонить от 1 до 5 заявок за раз. Нужно указать в теле запроса статус заявки REJECTED);
