@@ -37,11 +37,14 @@
 * Spring security
 * io.jsonwebtoken
 * Hibernate
+* Flyway
 * Lombok
 * PostgreSql
 * H2 database for test
 * Maven
 * Mockito
 * JUnit 5
+
+**схема базы данных**
 
   ![database diagram](https://github.com/Fenris06/application-manager/blob/master/application-db%20-%20public.png)
