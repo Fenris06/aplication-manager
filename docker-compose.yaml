@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  application-db:
+    image: postgres:15-alpine
+    container_name: application-db-liquibase-container
+    ports:
+      - "15432:5432"
+    environment:
+      - POSTGRES_DB=application-db-liquibase
+      - POSTGRES_USER=liquibase
+      - POSTGRES_PASSWORD=liquibase
+
+
+
+
+
