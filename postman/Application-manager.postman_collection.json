@@ -37,6 +37,44 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJPZGluIiwiaWF0IjoxNzEwMDY3OTYyLCJpc3MiOiJhcHBsaWNhdGlvbi1tYW5hZ2VyIiwiZXhwIjoxNzEwMDcxNTYyfQ.aB840-8UJelUS6UbgTWPX8CE-fd5r31zVftny6WEAWs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Odin\",\r\n    \"password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -158,11 +196,21 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJPZGluIiwiaWF0IjoxNzA5ODM5MjU2LCJpc3MiOiJhcHBsaWNhdGlvbi1tYW5hZ2VyIiwiZXhwIjoxNzA5ODQyODU2fQ.j5j0pxZYKLW9AbU-Y1rlZHd9ot19TEDlH580wjlQk84",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Applications\",\n    \"description\": \"new application for\",\n    \"phoneNumber\": \"89261234567\",\n    \"status\": \"DRAFT\"\n}",
+							"raw": "{\n\t\"name\": \"Applications\",\n    \"description\": \"new application for\",\n    \"phoneNumber\": \"89261234567\",\n    \"status\": \"SENT\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -184,7 +232,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "2"
 								}
 							]
 						},
