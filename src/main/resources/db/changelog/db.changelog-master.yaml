@@ -123,3 +123,221 @@ databaseChangeLog:
             referencedTableName: users
             referencedColumnNames: id
             constraintName: user_roles_users_fk
+
+ - changeSet:
+      id: 2
+      author: fenris06
+      changes:
+         - insert:
+             tableName: users
+             columns:
+               - column:
+                   name: user_name
+                   value: Thor
+               - column:
+                   name: email
+                   value: thor@.ru
+               - column:
+                   name: password
+                   value: $2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.
+
+ - changeSet:
+     id: 3
+     author: fenris06
+     changes:
+       - insert:
+           tableName: users
+           columns:
+             - column:
+                 name: user_name
+                 value: Odin
+             - column:
+                 name: email
+                 value: odin@.ru
+             - column:
+                 name: password
+                 value: $2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.
+
+ - changeSet:
+     id: 4
+     author: fenris06
+     changes:
+       - insert:
+           tableName: users
+           columns:
+             - column:
+                 name: user_name
+                 value: Loki
+             - column:
+                 name: email
+                 value: loki@.ru
+             - column:
+                 name: password
+                 value: $2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.
+
+ - changeSet:
+     id: 5
+     author: fenris06
+     changes:
+       - insert:
+           tableName: users
+           columns:
+             - column:
+                 name: user_name
+                 value: Sif
+             - column:
+                 name: email
+                 value: sif@.ru
+             - column:
+                 name: password
+                 value: $2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.
+
+ - changeSet:
+     id: 6
+     author: fenris06
+     changes:
+       - insert:
+           tableName: users
+           columns:
+             - column:
+                 name: user_name
+                 value: Heimdallr
+             - column:
+                 name: email
+                 value: heimdallr@.ru
+             - column:
+                 name: password
+                 value: $2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.
+
+ - changeSet:
+     id: 7
+     author: fenris06
+     changes:
+       - insert:
+           tableName: users
+           columns:
+             - column:
+                 name: user_name
+                 value: Nanna
+             - column:
+                 name: email
+                 value: nanna@.ru
+             - column:
+                 name: password
+                 value: $2a$12$jwcvWLpmH1PTD1/NUKRyN.NslmQK7tUW4sCoDqNOCnG0w5AX3PEk.
+
+ - changeSet:
+     id: 8
+     author: fenris06
+     changes:
+       - insert:
+           tableName: roles
+           columns:
+             - column:
+                 name: name
+                 value: ROLE_USER
+
+ - changeSet:
+     id: 9
+     author: fenris06
+     changes:
+       - insert:
+           tableName: roles
+           columns:
+             - column:
+                 name: name
+                 value: ROLE_ADMIN
+
+ - changeSet:
+     id: 10
+     author: fenris06
+     changes:
+       - insert:
+           tableName: roles
+           columns:
+             - column:
+                 name: name
+                 value: ROLE_OPERATOR
+
+ - changeSet:
+     id: 11
+     author: fenris06
+     changes:
+       - insert:
+           tableName: user_roles
+           columns:
+             - column:
+                 name: user_id
+                 value: 1
+             - column:
+                 name: role_id
+                 value: 2
+
+ - changeSet:
+     id: 12
+     author: fenris06
+     changes:
+       - insert:
+           tableName: user_roles
+           columns:
+             - column:
+                 name: user_id
+                 value: 2
+             - column:
+                 name: role_id
+                 value: 1
+
+ - changeSet:
+     id: 13
+     author: fenris06
+     changes:
+       - insert:
+           tableName: user_roles
+           columns:
+             - column:
+                 name: user_id
+                 value: 3
+             - column:
+                 name: role_id
+                 value: 3
+ - changeSet:
+     id: 14
+     author: fenris06
+     changes:
+       - insert:
+           tableName: user_roles
+           columns:
+             - column:
+                 name: user_id
+                 value: 4
+             - column:
+                 name: role_id
+                 value: 1
+
+ - changeSet:
+     id: 15
+     author: fenris06
+     changes:
+       - insert:
+           tableName: user_roles
+           columns:
+             - column:
+                 name: user_id
+                 value: 5
+             - column:
+                 name: role_id
+                 value: 1
+
+ - changeSet:
+     id: 16
+     author: fenris06
+     changes:
+       - insert:
+           tableName: user_roles
+           columns:
+             - column:
+                 name: user_id
+                 value: 6
+             - column:
+                 name: role_id
+                 value: 1
