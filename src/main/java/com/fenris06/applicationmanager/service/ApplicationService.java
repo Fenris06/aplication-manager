@@ -3,9 +3,10 @@ package com.fenris06.applicationmanager.service;
 import com.fenris06.applicationmanager.dto.RequestApplicationDto;
 import com.fenris06.applicationmanager.dto.ResponseApplicationDto;
 import com.fenris06.applicationmanager.dto.UpdateListApplicationDto;
-import com.fenris06.applicationmanager.model.AdminApplicationStatus;
+import com.fenris06.applicationmanager.model.Status;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ApplicationService {
     ResponseApplicationDto createApplication(Long userId, RequestApplicationDto body);
@@ -20,5 +21,5 @@ public interface ApplicationService {
 
     List<ResponseApplicationDto> updateApplicationStatus(UpdateListApplicationDto applicationDto);
 
-    List<ResponseApplicationDto> getAdminApplications(List<AdminApplicationStatus> applicationStatuses, String userName, Integer from, Integer size, String sort);
+    List<ResponseApplicationDto> getAdminApplications(Set<Status> applicationStatuses, String userName, Integer from, Integer size, String sort);
 }

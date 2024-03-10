@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class ExceptionController {
+    //TODO Не забыть добавить контроллер тровабле
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)

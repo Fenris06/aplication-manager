@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<ResponseApplicationDto> getUserApplications(Long userId, Integer from, Integer size, String sort) {
-        PageRequest pageRequest = PageRequest.of(size, size);
+        PageRequest pageRequest = PageRequest.of(from, size);
         return switch (sort) {
             case "ASC" -> applicationRepository.findApplicationsByUserAsc(userId, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
@@ -93,9 +90,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<ResponseApplicationDto> getAdminApplications(List<AdminApplicationStatus> applicationStatuses, String userName, Integer from, Integer size, String sort) {
+    public List<ResponseApplicationDto> getAdminApplications(Set<Status> applicationStatuses, String userName, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from, size); // TODO поправить пагинацию
-        List<Status> statusList = createStatusList(applicationStatuses); //TODO подумать над проверкой листа со статусами для админа
+        List<Status> statusList = checkAdminStatusList(applicationStatuses); //TODO подумать над проверкой листа со статусами для админа
         if (!userName.isEmpty()) {
             return getApplicationByUserName(userName, statusList, pageRequest, sort);
         } else {
@@ -103,8 +100,12 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
     }
 
-    private List<Status> createStatusList(List<AdminApplicationStatus> applicationStatuses) {
-        return applicationStatuses.stream().map(a -> Status.valueOf(a.name())).toList();
+    private List<Status> checkAdminStatusList(Set<Status> applicationStatuses) {
+        if (applicationStatuses.contains(Status.DRAFT)) {
+            throw new ArgumentException("You can use status DRAFT. You can use status, ACCEPTED, REJECTED, SENT");
+        }
+        return applicationStatuses.stream()
+                .toList();
     }
 
     private List<Application> updateApplicationStatusByOperator(Map<Long, Application> applicationMap, UpdateListApplicationDto applicationDto) {
