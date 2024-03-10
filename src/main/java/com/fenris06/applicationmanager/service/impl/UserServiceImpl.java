@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         setRole(users, role);
         return userRepository.saveAll(users).stream()
                 .map(UserMapper::toDto)
-                .collect(Collectors.toList()); //TODO подумать как уменьшить количество запросов
+                .collect(Collectors.toList());
     }
 
     private List<User> getUpdateUsers(Set<Long> ids) {
