@@ -26,7 +26,7 @@
 * отклонять заявки http://localhost:8080/applications/operator/update (можно отклонить от 1 до 5 заявок за раз. Нужно указать в теле запроса статус заявки REJECTED);
 
  **Работа с приложением**:
- Для удобства можно загрузить тесты для postman из папки aplication-manager\postman\Application-manager.postman_collection.json. В системе загружено шесть пользователей. У всех пользователей пароль 123. Посмотреть список загруженных пользователей и их роли можно папки с миграциями базы данных aplication-manager\src\main\resources\db\changelog.
+ Для удобства можно загрузить тесты для postman из папки aplication-manager\postman\Application-manager.postman_collection.json. Перед стартом приложения запустите docker-compose.yaml. В нем находится сконфигурированная база данных. В системе загружено шесть пользователей. У всех пользователей пароль 123. Посмотреть список загруженных пользователей и их роли можно папки с миграциями базы данных aplication-manager\src\main\resources\db\changelog.
 * Для работы в роли User можно залогинится под именем Odin пароль 123. Для этого в postman тестах есть папка Autorization. В теле запроса нужно заполнить поля и отправить запрос. В ответе в hedars Authorization придет ваш токен. Далее для роли User доступна пака с тестами User Applications. Перед запуском теста необходимо выбрать авторизацию через Barer Token и указать ваш токен.
 * Для работы в роли Admin залогинится под именем Thor пароль 123 . Далее действовать аналогично роли User. Для роли Admin доступны папки Admin Users и  Admin Application.
 * Для работы в роли Operator залогинится под именем Loki пароль 123 . Далее действовать аналогично роли User. Для роли Operator доступны папки Operator Application.
