@@ -4,16 +4,18 @@ import com.fenris06.applicationmanager.dto.RequestApplicationDto;
 import com.fenris06.applicationmanager.dto.ResponseApplicationDto;
 
 import com.fenris06.applicationmanager.dto.UpdateListApplicationDto;
-import com.fenris06.applicationmanager.model.AdminApplicationStatus;
+import com.fenris06.applicationmanager.model.Status;
 import com.fenris06.applicationmanager.service.ApplicationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/applications")
@@ -50,6 +52,7 @@ public class ApplicationController {
                                                               @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
         return applicationService.getAllSentApplication(userName, from, size, sort);
     }
+
     @GetMapping("/operator/{applicationId}")
     public ResponseApplicationDto getApplicationById(@PathVariable("applicationId") @Min(1) Long applicationId) {
         return applicationService.getApplicationById(applicationId);
@@ -61,7 +64,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/admin")
-    public List<ResponseApplicationDto> getAdminApplications(@RequestParam(name = "status", required = false, defaultValue = "SENT") List<AdminApplicationStatus> statusList,
+    public List<ResponseApplicationDto> getAdminApplications(@RequestParam(name = "status", required = false, defaultValue = "SENT") @Size(min = 1, max = 3) Set<Status> statusList,
                                                              @RequestParam(name = "userName", required = false, defaultValue = "") String userName,
                                                              @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                              @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
