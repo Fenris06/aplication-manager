@@ -41,7 +41,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application application = checkApplication(applicationId);
         checkOwner(application, userId);
         checkApplicationUserStatus(application);
-        updateFields(application, body); // TODO валидация полей
+        updateFields(application, body);
         return ApplicationMapper.toDto(applicationRepository.save(application));
     }
 
@@ -91,8 +91,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<ResponseApplicationDto> getAdminApplications(Set<Status> applicationStatuses, String userName, Integer from, Integer size, String sort) {
-        PageRequest pageRequest = PageRequest.of(from, size); // TODO поправить пагинацию
-        List<Status> statusList = checkAdminStatusList(applicationStatuses); //TODO подумать над проверкой листа со статусами для админа
+        PageRequest pageRequest = PageRequest.of(from, size);
+        List<Status> statusList = checkAdminStatusList(applicationStatuses);
         if (!userName.isEmpty()) {
             return getApplicationByUserName(userName, statusList, pageRequest, sort);
         } else {

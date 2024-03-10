@@ -19,7 +19,17 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class ExceptionController {
-    //TODO Не забыть добавить контроллер тровабле
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse throwableHandler(final Throwable e) {
+        return new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                "something unusual.",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)

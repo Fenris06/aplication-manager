@@ -6,6 +6,8 @@ import com.fenris06.applicationmanager.dto.ResponseApplicationDto;
 import com.fenris06.applicationmanager.dto.UpdateListApplicationDto;
 import com.fenris06.applicationmanager.model.Status;
 import com.fenris06.applicationmanager.service.ApplicationService;
+import com.fenris06.applicationmanager.utils.validationgroup.Create;
+import com.fenris06.applicationmanager.utils.validationgroup.Update;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,12 +27,14 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @PostMapping("/users/{userId}")
+    @Validated(Create.class)
     public ResponseApplicationDto createApplication(@PathVariable("userId") @Min(1) Long userId,
                                                     @RequestBody @Valid RequestApplicationDto body) {
         return applicationService.createApplication(userId, body);
     }
 
     @PatchMapping("/users/{userId}/update/{applicationId}")
+    @Validated(Update.class)
     public ResponseApplicationDto updateApplication(@PathVariable("userId") @Min(1) Long userId,
                                                     @PathVariable("applicationId") @Min(1) Long applicationId,
                                                     @RequestBody @Valid RequestApplicationDto body) {
