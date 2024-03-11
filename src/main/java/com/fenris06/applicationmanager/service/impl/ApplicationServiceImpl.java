@@ -28,6 +28,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public ResponseApplicationDto createApplication(Long userId, RequestApplicationDto body) {
         User user = checkUser(userId);
         Application application = ApplicationMapper.fromDto(body);
@@ -36,6 +37,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional
     public ResponseApplicationDto updateApplication(Long userId, Long applicationId, RequestApplicationDto body) {
         checkUser(userId);
         Application application = checkApplication(applicationId);
@@ -46,6 +48,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseApplicationDto> getUserApplications(Long userId, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from, size);
         return switch (sort) {
@@ -72,6 +75,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseApplicationDto getApplicationById(Long applicationId) {
         Application application = checkApplication(applicationId);
         checkApplicationOperatorStatus(application.getStatus());
@@ -80,6 +84,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
 
     @Override
+    @Transactional
     public List<ResponseApplicationDto> updateApplicationStatus(UpdateListApplicationDto applicationDto) {
         checkUpdateStatus(applicationDto);
         Map<Long, Application> applicationMap = findUpdateApplications(applicationDto);
@@ -90,6 +95,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseApplicationDto> getAdminApplications(Set<Status> applicationStatuses, String userName, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from, size);
         List<Status> statusList = checkAdminStatusList(applicationStatuses);
