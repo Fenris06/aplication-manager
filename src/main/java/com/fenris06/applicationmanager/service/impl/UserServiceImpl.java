@@ -9,6 +9,7 @@ import com.fenris06.applicationmanager.repository.RoleRepository;
 import com.fenris06.applicationmanager.repository.UserRepository;
 import com.fenris06.applicationmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserDto> getUsers(Integer from, Integer size) {
         PageRequest pageRequest = PageRequest.of(from, size);
+        log.debug("UserServiceImpl getusers from {}, size {}", from, size);
         return userRepository.findAllWithRoles(pageRequest).stream()
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
         Role role = getRole();
         List<User> users = getUpdateUsers(ids);
         setRole(users, role);
+        log.debug("UserServiceImpl updateUsersRole ids {}", ids);
         return userRepository.saveAll(users).stream()
                 .map(UserMapper::toDto)
                 .collect(Collectors.toList());

@@ -12,17 +12,19 @@ import com.fenris06.applicationmanager.repository.ApplicationRepository;
 import com.fenris06.applicationmanager.repository.UserRepository;
 import com.fenris06.applicationmanager.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Validated
+@Slf4j
 public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
@@ -33,6 +35,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         User user = checkUser(userId);
         Application application = ApplicationMapper.fromDto(body);
         application.setUser(user);
+        log.debug("ApplicationServiceImpl createApplication userId {}, body {}", userId, body);
         return ApplicationMapper.toDto(applicationRepository.save(application));
     }
 
@@ -44,6 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         checkOwner(application, userId);
         checkApplicationUserStatus(application);
         updateFields(application, body);
+        log.debug("ApplicationServiceImpl updateApplication userId {}, applicationId {}, body {}", userId, applicationId, body);
         return ApplicationMapper.toDto(applicationRepository.save(application));
     }
 
@@ -51,6 +55,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Transactional(readOnly = true)
     public List<ResponseApplicationDto> getUserApplications(Long userId, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from, size);
+        log.debug("ApplicationServiceImpl getUserApplications userId {}, from {}, size {}, sort {}", userId, from, size, sort);
         return switch (sort) {
             case "ASC" -> applicationRepository.findApplicationsByUserAsc(userId, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
@@ -67,6 +72,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Transactional(readOnly = true)
     public List<ResponseApplicationDto> getAllSentApplication(String userName, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from, size);
+        log.debug("ApplicationServiceImpl getAllSentApplication userName {}, from {}, size {}, sort {}", userName, from, size, sort);
         if (!userName.isEmpty()) {
             return getApplicationByUserName(userName, List.of(Status.SENT), pageRequest, sort);
         } else {
@@ -79,6 +85,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ResponseApplicationDto getApplicationById(Long applicationId) {
         Application application = checkApplication(applicationId);
         checkApplicationOperatorStatus(application.getStatus());
+        log.debug("ApplicationServiceImpl getApplicationById applicationId {}", application);
         return ApplicationMapper.toDto(application);
     }
 
@@ -89,6 +96,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         checkUpdateStatus(applicationDto);
         Map<Long, Application> applicationMap = findUpdateApplications(applicationDto);
         List<Application> updateStatus = updateApplicationStatusByOperator(applicationMap, applicationDto);
+        log.debug("ApplicationServiceImpl updateApplicationStatus applicationDto {}", applicationDto);
         return applicationRepository.saveAll(updateStatus).stream()
                 .map(ApplicationMapper::toDto)
                 .collect(Collectors.toList());
@@ -99,6 +107,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ResponseApplicationDto> getAdminApplications(Set<Status> applicationStatuses, String userName, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from, size);
         List<Status> statusList = checkAdminStatusList(applicationStatuses);
+        log.debug("ApplicationServiceImpl getAdminApplications applicationStatuses {}, userName {}, from {}, size {}, sort {}", applicationStatuses, userName, from, size, sort);
         if (!userName.isEmpty()) {
             return getApplicationByUserName(userName, statusList, pageRequest, sort);
         } else {
