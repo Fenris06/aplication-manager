@@ -6,6 +6,7 @@ import com.fenris06.applicationmanager.exception.DataValidationException;
 import com.fenris06.applicationmanager.exception.ErrorResponse;
 import com.fenris06.applicationmanager.exception.NotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -18,11 +19,13 @@ import java.time.LocalDateTime;
 
 
 @RestControllerAdvice
+@Slf4j
 public class ExceptionController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse throwableHandler(final Throwable e) {
+        log.error("throwableHandler", e);
         return new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 "something unusual.",
@@ -34,6 +37,7 @@ public class ExceptionController {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse notFoundHandler(final NotFoundException e) {
+        log.error("notFoundHandler", e);
         return new ErrorResponse(
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 "The required object was not found.",
@@ -45,6 +49,7 @@ public class ExceptionController {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse notFormatHandler(final NumberFormatException e) {
+        log.error("notFormatHandle", e);
         return new ErrorResponse(
                 HttpStatus.NOT_FOUND.getReasonPhrase(),
                 "Incorrectly made request.",
@@ -55,9 +60,10 @@ public class ExceptionController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse emailValidException(final MethodArgumentNotValidException e) {
+    public ErrorResponse methodArgumentNotValidException(final MethodArgumentNotValidException e) {
         FieldError error = e.getFieldError();
         if (error == null) {
+            log.error("methodArgumentNotValidException", e);
             return new ErrorResponse(
                     HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     "Incorrectly made request.",
@@ -65,6 +71,7 @@ public class ExceptionController {
                     LocalDateTime.now()
             );
         } else {
+            log.error("methodArgumentNotValidException", e);
             return new ErrorResponse(
                     HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     "Incorrectly made request.",
@@ -76,7 +83,8 @@ public class ExceptionController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleAll(ConstraintViolationException e) {
+    public ErrorResponse constraintViolationExceptionHandler(ConstraintViolationException e) {
+        log.error("constraintViolationExceptionHandler", e);
         return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 "Incorrectly made request.",
                 e.getMessage(),
@@ -85,7 +93,8 @@ public class ExceptionController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse constraintHandler(final DataIntegrityViolationException e) {
+    public ErrorResponse dataIntegrityViolationExceptionHandler(final DataIntegrityViolationException e) {
+        log.error("dataIntegrityViolationExceptionHandler", e);
         return new ErrorResponse(
                 HttpStatus.CONFLICT.getReasonPhrase(),
                 "Integrity constraint has been violated.",
@@ -96,7 +105,8 @@ public class ExceptionController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse dateHandler(final DataValidationException e) {
+    public ErrorResponse dataValidationExceptionHandler(final DataValidationException e) {
+        log.error("dataValidationExceptionHandler", e);
         return new ErrorResponse(
                 "FORBIDDEN",
                 "For the requested operation the conditions are not met.",
@@ -108,6 +118,7 @@ public class ExceptionController {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse argumentHandler(final ArgumentException e) {
+        log.error("argumentHandler", e);
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 "Incorrectly made request.",
