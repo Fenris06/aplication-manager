@@ -9,12 +9,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 public class RequestApplicationDto {
     private Long id;
     @NotBlank(message = "Field name can't be empty or have only spase", groups = Create.class)

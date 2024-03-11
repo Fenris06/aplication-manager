@@ -5,10 +5,12 @@ import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 public class UserAuthorizationDto {
     @Size(min = 3, max = 50, message = "The name field must be a minimum of 3 and a maximum of 50 characters long")
     @NotBlank(message = "The name field can't be empty or have only space")

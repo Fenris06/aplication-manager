@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import java.util.Set;
 @RequestMapping("/applications")
 @RequiredArgsConstructor
 @Validated
+@Slf4j
 public class ApplicationController {
     private final ApplicationService applicationService;
 
@@ -30,6 +32,7 @@ public class ApplicationController {
     @Validated(Create.class)
     public ResponseApplicationDto createApplication(@PathVariable("userId") @Min(1) Long userId,
                                                     @RequestBody @Valid RequestApplicationDto body) {
+        log.debug("POST /users/userId {}, body {}", userId, body);
         return applicationService.createApplication(userId, body);
     }
 
@@ -38,6 +41,7 @@ public class ApplicationController {
     public ResponseApplicationDto updateApplication(@PathVariable("userId") @Min(1) Long userId,
                                                     @PathVariable("applicationId") @Min(1) Long applicationId,
                                                     @RequestBody @Valid RequestApplicationDto body) {
+        log.debug("PATCH /users/userId {}, body {}", userId, body);
         return applicationService.updateApplication(userId, applicationId, body);
     }
 
@@ -46,6 +50,7 @@ public class ApplicationController {
                                                             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                             @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
                                                             @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+        log.debug("GET /users/userId {}, from {}, size {}, sort {}", userId, from, size, sort);
         return applicationService.getUserApplications(userId, from, size, sort);
     }
 
@@ -54,16 +59,19 @@ public class ApplicationController {
                                                               @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                               @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
                                                               @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+        log.debug("GET /operator userName {}, from {}, size {}, sort {}", userName, from, size, sort);
         return applicationService.getAllSentApplication(userName, from, size, sort);
     }
 
     @GetMapping("/operator/{applicationId}")
     public ResponseApplicationDto getApplicationById(@PathVariable("applicationId") @Min(1) Long applicationId) {
+        log.debug("GET /operator/applicationId applicationId {}", applicationId);
         return applicationService.getApplicationById(applicationId);
     }
 
     @PatchMapping("/operator/update")
     public List<ResponseApplicationDto> updateApplicationStatus(@RequestBody @Valid UpdateListApplicationDto applicationDto) {
+        log.debug("PATCH /operator/update body {}", applicationDto);
         return applicationService.updateApplicationStatus(applicationDto);
     }
 
@@ -73,6 +81,7 @@ public class ApplicationController {
                                                              @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                              @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
                                                              @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
+        log.debug("GET /admin status {}, userName {}, from {}, size {}, sort {}", statusList, userName, from, size, sort);
         return applicationService.getAdminApplications(statusList, userName, from, size, sort);
     }
 }

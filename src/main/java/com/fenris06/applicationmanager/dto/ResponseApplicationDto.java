@@ -7,12 +7,14 @@ import com.fenris06.applicationmanager.model.Status;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 public class ResponseApplicationDto {
     private Long id;
     private String name;
