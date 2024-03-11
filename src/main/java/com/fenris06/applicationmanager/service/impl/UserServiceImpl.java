@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private String updateRole;
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getUsers(Integer from, Integer size) {
         PageRequest pageRequest = PageRequest.of(from, size);
         return userRepository.findAllWithRoles(pageRequest).stream()
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<UserDto> updateUsersRole(Set<Long> ids) {
         Role role = getRole();
         List<User> users = getUpdateUsers(ids);
