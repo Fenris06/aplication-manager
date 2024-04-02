@@ -1,7 +1,7 @@
 package com.fenris06.applicationmanager.controller;
 
 import com.fenris06.applicationmanager.dto.UserAuthorizationDto;
-import com.fenris06.applicationmanager.dto.UserDto;
+
 import com.fenris06.applicationmanager.dto.UserResponseAuthorizationDto;
 import com.fenris06.applicationmanager.mapper.RoleMapper;
 import com.fenris06.applicationmanager.model.User;

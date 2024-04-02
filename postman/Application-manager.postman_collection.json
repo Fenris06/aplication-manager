@@ -191,7 +191,8 @@
 									"});",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -201,7 +202,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJPZGluIiwiaWF0IjoxNzA5ODM5MjU2LCJpc3MiOiJhcHBsaWNhdGlvbi1tYW5hZ2VyIiwiZXhwIjoxNzA5ODQyODU2fQ.j5j0pxZYKLW9AbU-Y1rlZHd9ot19TEDlH580wjlQk84",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJPZGluIiwiaWF0IjoxNzEyMDg2ODcyLCJpc3MiOiJhcHBsaWNhdGlvbi1tYW5hZ2VyIiwiZXhwIjoxNzEyMDkwNDcyfQ.kdNJl2qDVHx54Wk4z1Uio5owfb9iKfsif6b9NIBYbk4",
 									"type": "string"
 								}
 							]
@@ -210,7 +211,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Applications\",\n    \"description\": \"new application for\",\n    \"phoneNumber\": \"89261234567\",\n    \"status\": \"SENT\"\n}",
+							"raw": "{\n\t\"name\": \"Applications\",\n    \"description\": \"new application for\",\n    \"phoneNumber\": \"89261234567\",\n    \"status\": \"DRAFT\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -218,7 +219,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/applications/users/:id",
+							"raw": "http://localhost:8080/applications/users",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -226,14 +227,7 @@
 							"port": "8080",
 							"path": [
 								"applications",
-								"users",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "2"
-								}
+								"users"
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -301,10 +295,20 @@
 				{
 					"name": "Get User Applications DESC",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUaG9yIiwiaWF0IjoxNzEyMDg2NjI0LCJpc3MiOiJhcHBsaWNhdGlvbi1tYW5hZ2VyIiwiZXhwIjoxNzEyMDkwMjI0fQ.8RZCuP1ePauxVHQ5GOpUvbPlDI8YVdt2Rlauh5AMzkA",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/applications/users/:id?sort=DESC",
+							"raw": "http://localhost:8080/applications/users?sort=DESC",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -312,19 +316,12 @@
 							"port": "8080",
 							"path": [
 								"applications",
-								"users",
-								":id"
+								"users"
 							],
 							"query": [
 								{
 									"key": "sort",
 									"value": "DESC"
-								}
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
 								}
 							]
 						}
@@ -334,10 +331,20 @@
 				{
 					"name": "Get User Applications ASC",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJPZGluIiwiaWF0IjoxNzEyMDg2MzI1LCJpc3MiOiJhcHBsaWNhdGlvbi1tYW5hZ2VyIiwiZXhwIjoxNzEyMDg5OTI1fQ.i-mx0CFtdNV8RTfey5lhnGUeR5ypLJGQNIHvdKysBjM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/applications/users/:id?sort=ASC",
+							"raw": "http://localhost:8080/applications/users?sort=ASC",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -345,19 +352,12 @@
 							"port": "8080",
 							"path": [
 								"applications",
-								"users",
-								":id"
+								"users"
 							],
 							"query": [
 								{
 									"key": "sort",
 									"value": "ASC"
-								}
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
 								}
 							]
 						}

@@ -1,9 +1,10 @@
 package com.fenris06.applicationmanager.model;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
+
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Set;
 
 public interface ApplicationService {
-    ResponseApplicationDto createApplication(Long userId, RequestApplicationDto body);
+    ResponseApplicationDto createApplication(String username, RequestApplicationDto body);
 
-    ResponseApplicationDto updateApplication(Long userId, Long applicationId, RequestApplicationDto body);
+    ResponseApplicationDto updateApplication(String username, Long applicationId, RequestApplicationDto body);
 
-    List<ResponseApplicationDto> getUserApplications(Long userId, Integer from, Integer size, String sort);
+    List<ResponseApplicationDto> getUserApplications(String username, Integer from, Integer size, String sort);
 
     List<ResponseApplicationDto> getAllSentApplication(String userName, Integer from, Integer size, String sort);
 

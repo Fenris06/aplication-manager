@@ -1,6 +1,6 @@
 package com.fenris06.applicationmanager.dto;
 
-import com.fenris06.applicationmanager.model.Role;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

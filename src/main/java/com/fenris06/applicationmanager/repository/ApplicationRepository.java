@@ -17,16 +17,16 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("SELECT a " +
             "FROM Application a " +
             "JOIN FETCH a.user " +
-            "WHERE a.user.id = :id " +
+            "WHERE a.user.username = :username " +
             "ORDER BY a.createDate ASC")
-    List<Application> findApplicationsByUserAsc(Long id, Pageable pageable);
+    List<Application> findApplicationsByUserAsc(String username, Pageable pageable);
 
     @Query("SELECT a " +
             "FROM Application a " +
             "JOIN FETCH a.user " +
-            "WHERE a.user.id = :id " +
+            "WHERE a.user.username = :username " +
             "ORDER BY a.createDate DESC")
-    List<Application> findApplicationsByUserDESC(Long id, Pageable pageable);
+    List<Application> findApplicationsByUserDESC(String username, Pageable pageable);
 
     @Query("SELECT a " +
             "FROM Application a " +
