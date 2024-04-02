@@ -31,36 +31,36 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     @Transactional
-    public ResponseApplicationDto createApplication(Long userId, RequestApplicationDto body) {
-        User user = checkUser(userId);
+    public ResponseApplicationDto createApplication(String username, RequestApplicationDto body) {
+        User user = checkUser(username);
         Application application = ApplicationMapper.fromDto(body);
         application.setUser(user);
-        log.debug("ApplicationServiceImpl createApplication userId {}, body {}", userId, body);
+        log.debug("ApplicationServiceImpl createApplication userId {}, body {}", username, body);
         return ApplicationMapper.toDto(applicationRepository.save(application));
     }
 
     @Override
     @Transactional
-    public ResponseApplicationDto updateApplication(Long userId, Long applicationId, RequestApplicationDto body) {
-        checkUser(userId);
+    public ResponseApplicationDto updateApplication(String username, Long applicationId, RequestApplicationDto body) {
+        User user = checkUser(username);
         Application application = checkApplication(applicationId);
-        checkOwner(application, userId);
+        checkOwner(application, user.getId());
         checkApplicationUserStatus(application);
         updateFields(application, body);
-        log.debug("ApplicationServiceImpl updateApplication userId {}, applicationId {}, body {}", userId, applicationId, body);
+        log.debug("ApplicationServiceImpl updateApplication userId {}, applicationId {}, body {}", username, applicationId, body);
         return ApplicationMapper.toDto(applicationRepository.save(application));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ResponseApplicationDto> getUserApplications(Long userId, Integer from, Integer size, String sort) {
+    public List<ResponseApplicationDto> getUserApplications(String username, Integer from, Integer size, String sort) {
         PageRequest pageRequest = PageRequest.of(from, size);
-        log.debug("ApplicationServiceImpl getUserApplications userId {}, from {}, size {}, sort {}", userId, from, size, sort);
+        log.debug("ApplicationServiceImpl getUserApplications userId {}, from {}, size {}, sort {}", username, from, size, sort);
         return switch (sort) {
-            case "ASC" -> applicationRepository.findApplicationsByUserAsc(userId, pageRequest).stream()
+            case "ASC" -> applicationRepository.findApplicationsByUserAsc(username, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
                     .collect(Collectors.toList());
-            case "DESC" -> applicationRepository.findApplicationsByUserDESC(userId, pageRequest).stream()
+            case "DESC" -> applicationRepository.findApplicationsByUserDESC(username, pageRequest).stream()
                     .map(ApplicationMapper::toDto)
                     .collect(Collectors.toList());
             default -> throw new ArgumentException(String.format("Type of sort = %s unsupported", sort));
@@ -190,9 +190,9 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
     }
 
-    private User checkUser(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("User id = %d not found", userId)));
+    private User checkUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(String.format("User username = %s not found", username)));
     }
 
     private Application checkApplication(Long applicationId) {

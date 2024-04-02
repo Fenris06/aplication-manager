@@ -14,8 +14,11 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Set;
@@ -28,30 +31,30 @@ import java.util.Set;
 public class ApplicationController {
     private final ApplicationService applicationService;
 
-    @PostMapping("/users/{userId}")
+    @PostMapping("/users")
     @Validated(Create.class)
-    public ResponseApplicationDto createApplication(@PathVariable("userId") @Min(1) Long userId,
+    public ResponseApplicationDto createApplication(@AuthenticationPrincipal UserDetails userDetails,
                                                     @RequestBody @Valid RequestApplicationDto body) {
-        log.debug("POST /users/userId {}, body {}", userId, body);
-        return applicationService.createApplication(userId, body);
+        log.debug("POST /users/username {}, body {}", userDetails.getUsername(), body);
+        return applicationService.createApplication(userDetails.getUsername(), body);
     }
 
-    @PatchMapping("/users/{userId}/update/{applicationId}")
+    @PatchMapping("/users/update/{applicationId}")
     @Validated(Update.class)
-    public ResponseApplicationDto updateApplication(@PathVariable("userId") @Min(1) Long userId,
+    public ResponseApplicationDto updateApplication(@AuthenticationPrincipal UserDetails userDetails,
                                                     @PathVariable("applicationId") @Min(1) Long applicationId,
                                                     @RequestBody @Valid RequestApplicationDto body) {
-        log.debug("PATCH /users/userId {}, body {}", userId, body);
-        return applicationService.updateApplication(userId, applicationId, body);
+        log.debug("PATCH /users/username {}, body {}", userDetails.getUsername(), body);
+        return applicationService.updateApplication(userDetails.getUsername(), applicationId, body);
     }
 
-    @GetMapping("/users/{userId}")
-    public List<ResponseApplicationDto> getUserApplications(@PathVariable("userId") @Min(1) Long userId,
+    @GetMapping("/users")
+    public List<ResponseApplicationDto> getUserApplications(@AuthenticationPrincipal UserDetails userDetails,
                                                             @RequestParam(name = "from", required = false, defaultValue = "0") @Min(0) Integer from,
                                                             @RequestParam(name = "size", required = false, defaultValue = "5") @Min(1) @Max(5) Integer size,
                                                             @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort) {
-        log.debug("GET /users/userId {}, from {}, size {}, sort {}", userId, from, size, sort);
-        return applicationService.getUserApplications(userId, from, size, sort);
+        log.debug("GET /users username {}, from {}, size {}, sort {}", userDetails.getUsername(), from, size, sort);
+        return applicationService.getUserApplications(userDetails.getUsername(), from, size, sort);
     }
 
     @GetMapping("/operator")
