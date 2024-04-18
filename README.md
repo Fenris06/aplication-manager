@@ -1,7 +1,7 @@
 # Application-manager
 Данный сервис предназначен для регистрации и обработки пользовательских заявок. У заявок есть четыре статуса: SENT, DRAFT, ACCEPTED, REJECTED. В приложение есть три роли: USER, ADMIN, OPERATOR.
 
-**Т.З** 
+**Т.З -** 
 https://github.com/Fenris06/application-manager/blob/master/%D0%A2%D0%97.pdf
 
 **Функции роли USER**
